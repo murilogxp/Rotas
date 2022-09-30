@@ -18,12 +18,12 @@ interface Client {
 
 const Clients = () => {
     const [clients, setClients] = useState<Client[]>([]);
-    
+
     useEffect(() => {
         api.get('clients')
-        .then(response => {
-            setClients(response.data);
-        });
+            .then(response => {
+                setClients(response.data);
+            });
     }, []);
 
     return (

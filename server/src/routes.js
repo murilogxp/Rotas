@@ -3,7 +3,7 @@ import { selectClients, selectClient, insertClient, updateClient, deleteClient }
 
 const router = Router();
 
-router.get('/', (req, res)=>{
+router.get('/', (req, res) => {
     res.json({
         "statusCode": 200,
         "msg": "Api Rodando"

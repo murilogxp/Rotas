@@ -29,10 +29,10 @@ const ChooseClients = () => {
     }
 
     function fetchData() {
-        api.get('clients', {params: {city: city}})
-        .then(response => {
-            setClients(response.data);
-        });
+        api.get('clients', { params: { city: city } })
+            .then(response => {
+                setClients(response.data);
+            });
     }
 
     useEffect(() => {
@@ -48,9 +48,9 @@ const ChooseClients = () => {
     return (
         <div id="page-choose-clients">
             <header>
-                    <h1>Aplicação para Gerenciamento de Rotas Utilizando Grafos</h1>
-                    <p><Link to='/'>Home</Link> {'->'} Selecionar Clientes para Montagem de Rota</p>
-                    (implementar seleção de clientes)
+                <h1>Aplicação para Gerenciamento de Rotas Utilizando Grafos</h1>
+                <p><Link to='/'>Home</Link> {'->'} Selecionar Clientes para Montagem de Rota</p>
+                (implementar seleção de clientes)
             </header>
             <main>
                 <h1>Seleção de Clientes para Montagem de Rota</h1>
@@ -60,7 +60,7 @@ const ChooseClients = () => {
                             <legend>Defina a Cidade para a Montagem da Rota</legend>
                             <div className="field">
                                 <label htmlFor="city">Cidade</label>
-                                <input type="text" name='city' id='city' onChange={handleInputChange}/>
+                                <input type="text" name='city' id='city' onChange={handleInputChange} />
                             </div>
                         </fieldset>
                         <button type='submit'>Buscar Clientes da Cidade</button>

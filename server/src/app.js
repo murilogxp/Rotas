@@ -12,9 +12,9 @@ app.use(router);
 
 createTable();
 
-app.listen(3030, ()=>console.log('Server Rodando'));
+app.listen(3030, () => console.log('Server Rodando'));
 
 https.createServer({
     cert: fs.readFileSync('src/SSL/code.crt'),
     key: fs.readFileSync('src/SSL/code.key')
-}, app).listen(3031, ()=>console.log('Server Rodando em https'));
+}, app).listen(3031, () => console.log('Server Rodando em https'));
