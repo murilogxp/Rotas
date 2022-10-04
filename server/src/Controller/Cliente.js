@@ -2,7 +2,7 @@ import { openDb } from "../configDB.js";
 
 export async function createTable() {
     openDb().then(db => {
-        db.exec('CREATE TABLE IF NOT EXISTS Client (id INTEGER PRIMARY KEY, name TEXT, reference TEXT, contact TEXT, address TEXT, city TEXT, lat TEXT, lon TEXT, extraInfos TEXT)');
+        db.exec('CREATE TABLE IF NOT EXISTS Client (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, reference TEXT, contact TEXT, address TEXT, city TEXT, lat TEXT, lon TEXT, extraInfos TEXT)');
     });
 };
 
