@@ -2,7 +2,7 @@ import { openDb } from "../configDB.js";
 
 export async function createTable() {
     openDb().then(db => {
-        db.exec('CREATE TABLE IF NOT EXISTS Client (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, reference TEXT, contact TEXT, address TEXT, city TEXT, lat TEXT, lon TEXT, extraInfos TEXT)');
+        db.exec('CREATE TABLE IF NOT EXISTS Client (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, reference TEXT, contact TEXT, address TEXT, city TEXT, lat TEXT, lng TEXT, extraInfos TEXT)');
     });
 };
 
@@ -10,12 +10,12 @@ export async function selectClients(req, res) {
     const city = req.query.city;
     if (city) {
         openDb().then(db => {
-            db.all('SELECT * FROM Client WHERE city=?', city)
+            db.all('SELECT * FROM Client WHERE city=? ORDER BY name', city)
                 .then(clients => res.json(clients));
         });
     } else {
         openDb().then(db => {
-            db.all('SELECT * FROM Client')
+            db.all('SELECT * FROM Client ORDER BY name')
                 .then(clients => res.json(clients));
         });
     }
@@ -32,17 +32,25 @@ export async function selectClient(req, res) {
 export async function insertClient(req, res) {
     let client = req.body;
     openDb().then(db => {
-        db.run('INSERT INTO Client (name, reference, contact, address, city, lat, lon, extraInfos) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [client.name, client.reference, client.contact, client.address, client.city, client.lat, client.lon, client.extraInfos]);
+        db.run('INSERT INTO Client (name, reference, contact, address, city, lat, lng, extraInfos) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [client.name, client.reference, client.contact, client.address, client.city, client.lat, client.lng, client.extraInfos]);
     });
     res.json({
         "statusCode": 200
     });
 };
 
+export async function insertRoute(req, res) {
+    let clients = req.body;
+    
+    res.json(clients);
+
+    console.log(clients);
+}
+
 export async function updateClient(req, res) {
     let client = req.body;
     openDb().then(db => {
-        db.run('UPDATE Client SET name=?, reference=?, contact=?, address=?, city=?, lat=?, lon=?, extraInfos=? WHERE id=?', [client.name, client.reference, client.contact, client.address, client.city, client.lat, client.lon, client.extraInfos, client.id]);
+        db.run('UPDATE Client SET name=?, reference=?, contact=?, address=?, city=?, lat=?, lng=?, extraInfos=? WHERE id=?', [client.name, client.reference, client.contact, client.address, client.city, client.lat, client.lng, client.extraInfos, client.id]);
     });
     res.json({
         "statusCode": 200
