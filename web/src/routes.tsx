@@ -6,8 +6,7 @@ import CreateClient from "./pages/CreateClient";
 import Clients from "./pages/Clients";
 import Client from "./pages/Client";
 import ChooseClients from "./pages/ChooseClients";
-
-import ClientMap from "./pages/ClientMap"; //////////////////
+import ShowRoute from "./pages/ShowRoute";
 
 const MainRoutes = () => {
   return (
@@ -17,6 +16,7 @@ const MainRoutes = () => {
       <Route path="/clients" element={<Clients />} />
       <Route path="/client/:id" element={<Client />} />
       <Route path="/chooseClients" element={<ChooseClients />} />
+      <Route path="/showRoute" element={<ShowRoute />} />
     </Routes>
   );
 };

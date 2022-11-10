@@ -35,7 +35,11 @@ const CreateClient = () => {
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+
+    setFormData((old) => ({ ...formData, [name]: value }));
+    setFormData((old) => ({ ...old, lat: latFromMap }));
+    setFormData((old) => ({ ...old, lng: lngFromMap }));
+    setFormData((old) => ({ ...old, address: addressFromMap }));
   }
 
   async function handleSubmit(event: FormEvent) {
@@ -54,9 +58,7 @@ const CreateClient = () => {
       lng,
       extraInfos,
     };
-    await api.post("client", data).then((response) => {
-      console.log(response);
-    });
+    await api.post("client", data);
 
     alert("Cliente Criado!");
 
@@ -70,7 +72,6 @@ const CreateClient = () => {
         <p>
           <Link to="/">Home</Link> {"->"} Cadastrar Cliente
         </p>
-        (corrigir 'onChange' dos inputs do mapa)
       </header>
       <form onSubmit={handleSubmit}>
         <h1>Cadastro de Cliente</h1>
@@ -116,43 +117,8 @@ const CreateClient = () => {
               handleLatLngFromMap={handleLatLngFromMap}
             />
           </div>
-          <div className="infos">
-            <div className="field">
-              <label htmlFor="address">Endereço (Mapa)</label>
-              <input
-                type="text"
-                name="address"
-                id="address"
-                value={addressFromMap}
-                required
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="field">
-              <label htmlFor="lat">Latitude (Mapa)</label>
-              <input
-                type="text"
-                name="lat"
-                id="lat"
-                value={latFromMap}
-                required
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="field">
-              <label htmlFor="lng">Longitude (Mapa)</label>
-              <input
-                type="text"
-                name="lng"
-                id="lng"
-                value={lngFromMap}
-                required
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
           <div className="field">
-            <label htmlFor="city">Cidade (Sigla)</label>
+            <label htmlFor="city">Área (sigla)</label>
             <input
               type="text"
               name="city"

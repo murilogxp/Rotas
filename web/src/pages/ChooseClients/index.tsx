@@ -1,13 +1,6 @@
-import React, {
-  ChangeEvent,
-  FormEvent,
-  MouseEvent,
-  useEffect,
-  useState,
-} from "react";
-import { Link } from "react-router-dom";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../../services/api";
-import Client from "../Client";
 
 import "./styles.css";
 
@@ -27,13 +20,9 @@ const ChooseClients = () => {
   const [city, setCity] = useState("");
   const [clients, setClients] = useState<Client[]>([]);
   const [selectedClientsIds, setSelectedClientsIds] = useState<number[]>([]);
-  const [selectedClients, setSelectedClients] = useState<
-    {
-      id: number;
-      lat: string;
-      lng: string;
-    }[]
-  >([]);
+  const [selectedClients, setSelectedClients] = useState<Client[]>([]);
+
+  const navigate = useNavigate();
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -57,7 +46,7 @@ const ChooseClients = () => {
     setCity(value);
   }
 
-  function handleSelectClient(id: number, lat: string, lng: string) {
+  function handleSelectClient(client: Client, id: number) {
     const alreadySelectedIds = selectedClientsIds.findIndex((client) => {
       return client === id;
     });
@@ -79,16 +68,14 @@ const ChooseClients = () => {
       );
       setSelectedClients(filteredClients);
     } else {
-      setSelectedClients([...selectedClients, { id: id, lat: lat, lng: lng }]);
+      setSelectedClients([...selectedClients, client]);
     }
   }
 
   async function handleRouteRequest() {
-    //console.log(selectedClients);
-
-    await api
-      .post("routeRequest", selectedClients)
-      .then((response) => console.log(response.data));
+    await api.post("routeRequest", selectedClients).then((response) => {
+      navigate("/showRoute", { state: response.data });
+    });
   }
 
   return (
@@ -105,9 +92,9 @@ const ChooseClients = () => {
         <div id="chooseCity">
           <form onSubmit={handleSubmit}>
             <fieldset>
-              <legend>Defina a Cidade para a Montagem da Rota</legend>
+              <legend>Defina a Área para a Montagem da Rota</legend>
               <div className="field">
-                <label htmlFor="city">Cidade</label>
+                <label htmlFor="city">Área (sigla)</label>
                 <input
                   type="text"
                   name="city"
@@ -116,7 +103,7 @@ const ChooseClients = () => {
                 />
               </div>
             </fieldset>
-            <button type="submit">Buscar Clientes da Cidade</button>
+            <button type="submit">Buscar Clientes da Área</button>
           </form>
         </div>
         <div id="choosableClients">
@@ -127,15 +114,11 @@ const ChooseClients = () => {
                 className={
                   selectedClientsIds.includes(client.id) ? "selected" : ""
                 }
-                onClick={() =>
-                  handleSelectClient(client.id, client.lat, client.lng)
-                }
+                onClick={() => handleSelectClient(client, client.id)}
               >
                 <p>
                   {client.name} {client.reference} {client.contact}{" "}
-                  <strong>
-                    {client.city} {client.id}
-                  </strong>
+                  <strong>{client.city}</strong>
                 </p>
               </li>
             ))}

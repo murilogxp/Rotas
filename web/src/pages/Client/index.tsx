@@ -19,7 +19,7 @@ const Client = () => {
   const [addressFromMap, setAddressFromMap] = useState<string>("");
   const [latFromMap, setLatFromMap] = useState<string>("");
   const [lngFromMap, setLngFromMap] = useState<string>("");
-  const [showDivMap, setShowDivMap] = useState(false);
+  const [showDivMap, setShowDivMap] = useState(true);
   const [client, setClient] = useState({
     id: 0,
     name: "",
@@ -48,7 +48,10 @@ const Client = () => {
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
 
-    setClient({ ...client, [name]: value });
+    setClient((old) => ({ ...client, [name]: value }));
+    setClient((old) => ({ ...old, lat: latFromMap }));
+    setClient((old) => ({ ...old, lng: lngFromMap }));
+    setClient((old) => ({ ...old, address: addressFromMap }));
   }
 
   const handleUpdateClient = () => {
@@ -56,7 +59,7 @@ const Client = () => {
     referenceField?.removeAttribute("disabled");
     contactField?.removeAttribute("disabled");
     addressField?.removeAttribute("disabled");
-    setShowDivMap(true);
+    setShowDivMap(false);
     latField?.removeAttribute("disabled");
     lngField?.removeAttribute("disabled");
     cityField?.removeAttribute("disabled");
@@ -114,6 +117,9 @@ const Client = () => {
   useEffect(() => {
     api.get(`client/${id}`).then((response) => {
       setClient(response.data);
+      setAddressFromMap(response.data.address);
+      setLatFromMap(response.data.lat);
+      setLngFromMap(response.data.lng);
     });
   }, []);
 
@@ -125,7 +131,6 @@ const Client = () => {
           <Link to="/">Home</Link> {"->"}{" "}
           <Link to="/clients">Listar Clientes</Link> {"->"} Visualizar Cliente
         </p>
-        (corrigir 'onChange' dos inputs do mapa)
       </header>
       <div id="content">
         <div id="clientOptions">
@@ -178,92 +183,19 @@ const Client = () => {
             </fieldset>
             <fieldset>
               <legend>Localização</legend>
-              {showDivMap ? (
+              <p>Selecione o local no mapa</p>
+              <div className="field" id="localeDiv">
                 <div className="map">
-                  <p>Selecione o local no mapa</p>
                   <ClientMap
                     handleAddressFromMap={handleAddressFromMap}
                     handleLatLngFromMap={handleLatLngFromMap}
                     newLatLngFromClient={`${client.lat}/${client.lng}`}
                   />
                 </div>
-              ) : null}
-              <div className="infos">
-                <div className="field">
-                  <label htmlFor="address">Endereço (Mapa)</label>
-                  {addressFromMap ? (
-                    <input
-                      type="text"
-                      name="address"
-                      id="address"
-                      value={addressFromMap}
-                      disabled
-                      required
-                      onChange={handleInputChange}
-                    />
-                  ) : (
-                    <input
-                      type="text"
-                      name="address"
-                      id="address"
-                      defaultValue={client?.address}
-                      disabled
-                      required
-                      onChange={handleInputChange}
-                    />
-                  )}
-                </div>
-                <div className="field">
-                  <label htmlFor="lat">Latitude (Mapa)</label>
-                  {latFromMap ? (
-                    <input
-                      type="text"
-                      name="lat"
-                      id="lat"
-                      value={latFromMap}
-                      disabled
-                      required
-                      onChange={handleInputChange}
-                    />
-                  ) : (
-                    <input
-                      type="text"
-                      name="lat"
-                      id="lat"
-                      defaultValue={client?.lat}
-                      disabled
-                      required
-                      onChange={handleInputChange}
-                    />
-                  )}
-                </div>
-                <div className="field">
-                  <label htmlFor="lng">Longitude (Mapa)</label>
-                  {lngFromMap ? (
-                    <input
-                      type="text"
-                      name="lng"
-                      id="lng"
-                      value={lngFromMap}
-                      disabled
-                      required
-                      onChange={handleInputChange}
-                    />
-                  ) : (
-                    <input
-                      type="text"
-                      name="lng"
-                      id="lng"
-                      defaultValue={client?.lng}
-                      disabled
-                      required
-                      onChange={handleInputChange}
-                    />
-                  )}
-                </div>
+                {showDivMap ? <div className="hideMap"></div> : null}
               </div>
               <div className="field">
-                <label htmlFor="city">Cidade</label>
+                <label htmlFor="city">Área (sigla)</label>
                 <input
                   type="text"
                   name="city"

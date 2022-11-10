@@ -1,0 +1,12 @@
+.hideMap {
+    backdrop-filter: blur(5px);
+    height: 500px;
+    width: 500px;
+    z-index: 3;
+    position: absolute;
+    float: left;
+}
+
+#localeDiv {
+    display: flex;
+}
