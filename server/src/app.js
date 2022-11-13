@@ -1,4 +1,4 @@
-import { createTable } from "./Controller/Cliente.js";
+import { createTable } from "./Controller/Client.js";
 import express from "express";
 import fs from "fs";
 import https from "https";

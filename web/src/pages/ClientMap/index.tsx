@@ -6,7 +6,6 @@ import {
   StandaloneSearchBox,
 } from "@react-google-maps/api";
 
-import "./styles.css";
 import { GOOGLE_MAPS_API_KEY } from "../../App";
 
 type ClientMapProps = {
@@ -106,7 +105,11 @@ const ClientMap = ({
             onLoad={loadSearchBox}
             onPlacesChanged={handleChangePlaces}
           >
-            <input className="address" type="text" placeholder="Endereço" />
+            <input
+              className="address"
+              type="text"
+              placeholder="Busque por um Endereço"
+            />
           </StandaloneSearchBox>
           <MarkerF position={marker} />
         </GoogleMap>

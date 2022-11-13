@@ -55,28 +55,25 @@ export async function insertClient(req, res) {
   });
   res.json({
     statusCode: 200,
+    msg: `Cliente ${client.name} criado com sucesso!`,
   });
 }
 
 export async function createRoute(req, res) {
   let clients = req.body;
   let generatedGraph = await graph(clients);
-  // let generatedGraph = [
-  //   [0, 11963, 2808, 2529, 2252],
-  //   [11328, 0, 10237, 13258, 10476],
-  //   [3393, 11139, 0, 8101, 1537],
-  //   [2244, 14450, 6524, 0, 6033],
-  //   [2069, 11321, 1551, 8283, 0],
-  // ];
+
+  if (generatedGraph.statusCode === 502) {
+    res.json(generatedGraph);
+    return;
+  }
+
   let orderedClientsIndex = dijkstra(generatedGraph);
   let orderedClients = [];
 
   for (let c = 0; c < orderedClientsIndex.length; c++) {
     orderedClients.push(clients[orderedClientsIndex[c]]);
   }
-
-  //console.log(orderedClientsIndex);
-  //console.log(orderedClients);
 
   res.json(orderedClients);
 }
@@ -101,15 +98,17 @@ export async function updateClient(req, res) {
   });
   res.json({
     statusCode: 200,
+    msg: `Dados do cliente ${client.name} atualizados com sucesso!`,
   });
 }
 
 export async function deleteClient(req, res) {
   let id = req.params.id;
   openDb().then((db) => {
-    db.get("DELETE FROM Client WHERE id=?", [id]).then((res) => res);
+    db.get("DELETE FROM Client WHERE id=?", [id]);
   });
   res.json({
     statusCode: 200,
+    msg: `Cliente de id = ${id} exluído(a) com sucesso!`,
   });
 }

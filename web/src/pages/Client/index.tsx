@@ -3,10 +3,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../../services/api";
 import ClientMap from "../ClientMap";
 
-import "./styles.css";
-
 const Client = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const nameField = document.querySelector("input#name");
   const referenceField = document.querySelector("input#reference");
   const contactField = document.querySelector("input#contact");
@@ -31,8 +30,6 @@ const Client = () => {
     lng: "",
     extraInfos: "",
   });
-
-  const navigate = useNavigate();
 
   function handleAddressFromMap(address: string) {
     setAddressFromMap(address);
@@ -67,17 +64,22 @@ const Client = () => {
     submitButton?.removeAttribute("disabled");
   };
 
-  const handleDeleteClient = () => {
-    let confirmDelete = window.confirm(`Usuário ${client.name} será excluído`);
+  async function handleDeleteClient() {
+    let confirmDelete = window.confirm(`Cliente ${client.name} será excluído`);
     if (confirmDelete) {
-      api.delete(`client/${id}`).then((response) => {
-        if (response.data.statusCode == 200) {
-          alert("Cliente Excluído com Sucesso");
-          navigate("/clients");
-        }
-      });
+      try {
+        await api.delete(`client/${id}`).then((response) => {
+          if (response.data.statusCode == 200) {
+            alert(response.data.msg);
+          }
+        });
+      } catch (error) {
+        alert(`Não foi possível excluir o(a) cliente ${client.name}
+        ${error}`);
+      }
+      navigate("/clients");
     }
-  };
+  }
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -106,12 +108,17 @@ const Client = () => {
       extraInfos,
     };
 
-    await api.put(`client`, data).then((response) => {
-      if (response.data.statusCode == 200) {
-        alert("Dados do Cliente Alterados com Sucesso");
-        navigate("/clients");
-      }
-    });
+    try {
+      await api.put(`client`, data).then((response) => {
+        if (response.data.statusCode == 200) {
+          alert(response.data.msg);
+        }
+      });
+    } catch (error) {
+      alert(`Não foi possível atualizar as informações do(a) cliente ${data.name}
+        ${error}`);
+    }
+    navigate("/clients");
   }
 
   useEffect(() => {
@@ -125,23 +132,30 @@ const Client = () => {
 
   return (
     <div id="page-client">
-      <header>
-        <h1>Aplicação para Gerenciamento de Rotas Utilizando Grafos</h1>
-        <p>
-          <Link to="/">Home</Link> {"->"}{" "}
-          <Link to="/clients">Listar Clientes</Link> {"->"} Visualizar Cliente
-        </p>
-      </header>
-      <div id="content">
-        <div id="clientOptions">
-          <button onClick={handleUpdateClient}>
-            Habilitar Edição de Dados do Cliente
-          </button>
-          <button onClick={handleDeleteClient}>Excluir Cliente</button>
-        </div>
+      <div className="content">
+        <header>
+          <h1>Aplicação para Gerenciamento de Rotas Utilizando Grafos</h1>
+          <p>
+            <Link to="/">Home</Link>
+            <span>{" > "}</span>
+            <Link to="/clients">Listar Clientes</Link>
+            <span>{" > "}</span>
+            <strong>Visualizar Cliente</strong>
+          </p>
+        </header>
         <main>
-          <form onSubmit={handleSubmit} key={client?.id}>
+          <div className="info">
             <h1>Dados do Cliente</h1>
+            <div id="clientOptions">
+              <button id="updateClient" onClick={handleUpdateClient}>
+                Habilitar Edição de Dados do Cliente
+              </button>
+              <button id="deleteClient" onClick={handleDeleteClient}>
+                Excluir Cliente
+              </button>
+            </div>
+          </div>
+          <form onSubmit={handleSubmit} key={client?.id}>
             <fieldset>
               <legend>Dados Pessoais</legend>
               <div className="field">
@@ -181,36 +195,37 @@ const Client = () => {
                 />
               </div>
             </fieldset>
-            <fieldset>
-              <legend>Localização</legend>
-              <p>Selecione o local no mapa</p>
-              <div className="field" id="localeDiv">
-                <div className="map">
-                  <ClientMap
-                    handleAddressFromMap={handleAddressFromMap}
-                    handleLatLngFromMap={handleLatLngFromMap}
-                    newLatLngFromClient={`${client.lat}/${client.lng}`}
-                  />
-                </div>
+            <fieldset className="map">
+              <legend>
+                Localização<span>Selecione o local no mapa</span>
+              </legend>
+              <div className="clientMapField">
+                <ClientMap
+                  handleAddressFromMap={handleAddressFromMap}
+                  handleLatLngFromMap={handleLatLngFromMap}
+                  newLatLngFromClient={`${client.lat}/${client.lng}`}
+                />
                 {showDivMap ? <div className="hideMap"></div> : null}
               </div>
-              <div className="field">
-                <label htmlFor="city">Área (sigla)</label>
-                <input
-                  type="text"
-                  name="city"
-                  id="city"
-                  value={client?.city}
-                  disabled
-                  required
-                  onChange={handleInputChange}
-                />
-              </div>
+              <fieldset className="area">
+                <div className="field">
+                  <label htmlFor="city">Área (sigla)</label>
+                  <input
+                    type="text"
+                    name="city"
+                    id="city"
+                    value={client?.city}
+                    disabled
+                    required
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </fieldset>
             </fieldset>
             <fieldset>
-              <legend>Informações Extras</legend>
+              <legend>Extras</legend>
               <div className="field">
-                <label htmlFor="extraInfos">Informações Extras</label>
+                <label htmlFor="extraInfos">Informações</label>
                 <input
                   type="text"
                   name="extraInfos"

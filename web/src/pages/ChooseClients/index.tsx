@@ -2,8 +2,6 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 
-import "./styles.css";
-
 interface Client {
   id: number;
   name: string;
@@ -73,59 +71,87 @@ const ChooseClients = () => {
   }
 
   async function handleRouteRequest() {
-    await api.post("routeRequest", selectedClients).then((response) => {
-      navigate("/showRoute", { state: response.data });
-    });
+    if (selectedClients.length > 0) {
+      await api.post("routeRequest", selectedClients).then((response) => {
+        if (response.data.statusCode === 502) {
+          alert(response.data.msg);
+        } else {
+          navigate("/showRoute", { state: response.data });
+        }
+      });
+    } else {
+      alert("Selecione ao menos 1 ponto de entrega");
+    }
   }
 
   return (
     <div id="page-choose-clients">
-      <header>
-        <h1>Aplicação para Gerenciamento de Rotas Utilizando Grafos</h1>
-        <p>
-          <Link to="/">Home</Link> {"->"} Selecionar Clientes para Montagem de
-          Rota
-        </p>
-      </header>
-      <main>
-        <h1>Seleção de Clientes para Montagem de Rota</h1>
-        <div id="chooseCity">
-          <form onSubmit={handleSubmit}>
-            <fieldset>
-              <legend>Defina a Área para a Montagem da Rota</legend>
-              <div className="field">
-                <label htmlFor="city">Área (sigla)</label>
-                <input
-                  type="text"
-                  name="city"
-                  id="city"
-                  onChange={handleInputChange}
-                />
-              </div>
-            </fieldset>
-            <button type="submit">Buscar Clientes da Área</button>
-          </form>
-        </div>
-        <div id="choosableClients">
-          <ul className="filteredClients">
-            {clients.map((client) => (
-              <li
-                key={client.id}
-                className={
-                  selectedClientsIds.includes(client.id) ? "selected" : ""
-                }
-                onClick={() => handleSelectClient(client, client.id)}
-              >
+      <div className="content">
+        <header>
+          <h1>Aplicação para Gerenciamento de Rotas Utilizando Grafos</h1>
+          <p>
+            <Link to="/">Home</Link>
+            <span>{" > "}</span>
+            <strong>Selecionar Clientes para Montagem de Rota</strong>
+          </p>
+        </header>
+        <main>
+          <div className="info">
+            <h1>Seleção de Clientes para Montagem de Rota</h1>
+          </div>
+          <div className="chooseCity">
+            <form onSubmit={handleSubmit}>
+              <fieldset>
+                <legend>Defina a Área para a Montagem da Rota</legend>
+                <div className="field">
+                  <label htmlFor="city">Área (sigla)</label>
+                  <input
+                    type="text"
+                    name="city"
+                    id="city"
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </fieldset>
+              <button type="submit">Buscar Clientes da Área</button>
+            </form>
+          </div>
+          <div className="choosableClients">
+            {clients.length > 0 ? (
+              <>
                 <p>
-                  {client.name} {client.reference} {client.contact}{" "}
-                  <strong>{client.city}</strong>
+                  O primeiro ponto de entrega selecionado será considerado o
+                  ponto de partida da rota
                 </p>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <button onClick={handleRouteRequest}>Montar Rota</button>
-      </main>
+                <div className="filteredClients">
+                  {clients.map((client) => (
+                    <div
+                      key={client.id}
+                      className={
+                        selectedClientsIds.includes(client.id)
+                          ? "filteredClient, selected"
+                          : "filteredClient"
+                      }
+                      onClick={() => handleSelectClient(client, client.id)}
+                    >
+                      <h1>{client.name}</h1>
+                      <h2>{client.reference}</h2>
+                      <h3>
+                        {client.contact} <strong>{client.city}</strong>
+                      </h3>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={handleRouteRequest}>Mostrar Rota</button>
+              </>
+            ) : (
+              <div className="noContent">
+                <p>Nenhum Cliente Encontrado</p>
+              </div>
+            )}
+          </div>
+        </main>
+      </div>
     </div>
   );
 };

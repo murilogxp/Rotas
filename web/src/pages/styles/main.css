@@ -1,0 +1,521 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    background-color: lightgray;
+    font-family: 'Roboto';
+}
+
+a {
+    color: #2c66ce;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button {
+    height: 30px;
+    background-color: rgb(228, 228, 228);
+    border: 1px solid lightgray;
+    border-radius: 2px;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: lightgray;
+    border-color: darkgrey;
+}
+
+input {
+    height: 30px;
+    border: 1px solid gray;
+    border-radius: 2px;
+    padding: 0px 10px;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 90vw;
+    min-height: 100vh;
+    height: 100%;
+    box-shadow: 2px 2px 15px black;
+}
+
+.hideMap {
+    backdrop-filter: blur(5px);
+    height: 500px;
+    width: 86.2%;
+    z-index: 3;
+    position: absolute;
+    float: left;
+}
+
+header {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.5);
+    background-color: rgb(228, 228, 228);
+}
+
+header h1 {
+    margin: 10px 20px;
+}
+
+header p {
+    font-size: 17px;
+    margin: 10px 20px;
+}
+
+header p strong {
+    font-weight: normal;
+}
+
+main {
+    padding: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+main .info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+main .info h1 {
+    font-size: 30px;
+    margin: 10px 20px;
+}
+
+main .info #clientOptions {
+    padding: 0 10px;
+}
+
+main .info #clientOptions button {
+    margin: 0 10px;
+}
+
+main .info #clientOptions button#updateClient {
+    background-color: rgb(238, 210, 2);
+}
+
+main .info #clientOptions button#updateClient:hover {
+    background-color: rgb(219, 194, 0);
+}
+
+main .info #clientOptions button#deleteClient {
+    background-color: rgb(208, 52, 44);
+    color: white;
+}
+
+main .info #clientOptions button#deleteClient:hover {
+    background-color: rgb(182, 38, 31);
+}
+
+main .info #clientOptions button#toggleMapView,
+main .info #clientOptions button#toggleListView,
+main .info #clientOptions button#googleMapsLink {
+    background-color: rgb(69, 139, 219);
+    color: white;
+}
+
+main .info #clientOptions button#toggleMapView:hover,
+main .info #clientOptions button#toggleListView:hover,
+main .info #clientOptions button#googleMapsLink:hover {
+    background-color: rgb(60, 127, 204);
+}
+
+
+main form {
+    padding: 5px;
+}
+
+main form fieldset {
+    border: none;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+}
+
+main form fieldset legend {
+    width: 100%;
+    font-size: 20px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+main form fieldset legend span {
+    font-size: 15px;
+}
+
+main form fieldset .field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    margin: 5px;
+}
+
+main form fieldset p,
+main form fieldset .field label {
+    font-size: 15px;
+}
+
+main form button {
+    margin-left: 15px;
+    margin-bottom: 15px;
+    width: 200px;
+    background-color: rgb(0, 212, 0);
+    color: white;
+}
+
+main form button:hover {
+    background-color: rgb(0, 184, 0);
+
+}
+
+main form fieldset.map {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+main form fieldset.map fieldset.area {
+    padding: 0;
+    margin: 0;
+}
+
+main form fieldset.map .clientMapField {
+    display: flex;
+    padding: 5px;
+}
+
+main table,
+main .choosableClients,
+main .clientsList,
+main .routeInstructions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px 10px;
+    margin:  -10px 10px 30px;
+    border-radius: 9px;
+    box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.5);
+}
+
+main .clientsList,
+main .routeInstructions {
+    align-items: flex-start;
+}
+
+main .clientsList h1,
+main .routeInstructions h1 {
+    margin: 10px;
+    font-size: 20px;
+}
+
+main table thead {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px 0;
+    margin-bottom: 10px;
+}
+
+main table thead th {
+    margin: 0 10px;
+    font-size: 15px;
+    width: 100%;
+}
+
+main table .tableBody {
+    width: 100%;
+}
+
+main table .tableBody tbody,
+main .clientsList .orderedClients,
+main .routeInstructions .legs {
+    /* padding: 0 10px; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main .clientsList .orderedClients,
+main .routeInstructions .legs {
+    padding: 0px;
+}
+
+main table .tableBody tbody tr,
+main .clientsList .orderedClients li,
+main .routeInstructions .legs li {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: rgb(228, 228, 228);
+}
+
+main table .tableBody tbody tr td,
+main .clientsList .orderedClients li,
+main .routeInstructions .legs li {
+    align-items: center;
+    text-align: center;
+    padding: 5px;
+    width: 100%;
+    margin: 0 10px;
+}
+
+main .clientsList .orderedClients li,
+main .routeInstructions .legs li {
+    margin-bottom: 10px;
+}
+
+main .routeInstructions .legs li {
+    flex-direction: column;
+
+}
+
+main .clientsList .orderedClients li p,
+main .routeInstructions .legs li p {
+    width: 100%;
+}
+
+main table .tableBody tbody tr td p,
+main .clientsList .orderedClients li p,
+main .routeInstructions .legs li p {
+    font-size: 15px;
+}
+
+main .clientsList .orderedClients li p,
+main .routeInstructions .legs li p {
+    padding: 5px 0px;
+}
+
+main .routeInstructions .legs li p {
+    text-align: start;
+    padding: 5px 10px;
+}
+
+main table .tableBody tbody tr td button,
+main .chooseCity form button {
+    background-color: rgb(69, 139, 219);
+    color: white;
+}
+
+main table .tableBody tbody tr td button:hover,
+main .chooseCity form button:hover {
+    background-color: rgb(60, 127, 204);
+}
+
+main table .tableBody .noContent,
+main .choosableClients .noContent {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main table .tableBody .noContent p,
+main .choosableClients .noContent p {
+    font-size: 20px;
+}
+
+main .chooseCity form {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+main .chooseCity form .field {
+    width: 200%;
+}
+
+main .chooseCity form button {
+    margin-top: 37px;
+}
+
+main .choosableClients p {
+    margin-top: 20px;
+}
+
+main .choosableClients .filteredClients {
+    width: 100%;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 5px 0;
+}
+
+main .choosableClients .filteredClients .filteredClient,
+main .choosableClients .filteredClients .selected {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgb(228, 228, 228);
+    border: 1px solid lightgray;
+}
+
+main .choosableClients .filteredClients .filteredClient:hover {
+    cursor: pointer;
+    background-color: lightgray;
+    border: 1px solid gray;
+}
+
+main .choosableClients .filteredClients .filteredClient h1,
+main .choosableClients .filteredClients .selected h1 {
+    font-weight: normal;
+    font-size: 25px;
+}
+
+main .choosableClients .filteredClients .filteredClient h2,
+main .choosableClients .filteredClients .selected h2 {
+    font-weight: normal;
+    font-size: 20px;
+}
+
+main .choosableClients .filteredClients .filteredClient h3,
+main .choosableClients .filteredClients .selected h3 {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-weight: normal;
+    font-size: 15px;
+}
+
+main .choosableClients .filteredClients .selected {
+    background-color: rgb(182, 231, 182);
+    border: 1px solid green;
+}
+
+main .choosableClients .filteredClients .selected:hover {
+    cursor: pointer;
+    background-color: rgb(132, 226, 132);
+    border: 1px solid darkgreen;
+}
+
+main .choosableClients button {
+    width: 200px;
+    margin-bottom: 20px;
+    background-color: rgb(69, 139, 219);
+    color: white;
+}
+
+main .choosableClients button:hover {
+    background-color: rgb(60, 127, 204);
+}
+
+/* main .clientsList {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    background-color: aquamarine;
+
+    width: 100%;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 5px 0;
+} */
+
+/* main .clientsList .orderedClients {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: aqua;
+} */
+
+
+
+main.homepage {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: center;
+}
+
+main.homepage .info {
+    flex-direction: column;
+    margin: 0px;
+}
+
+main.homepage h2 {
+    font-size: 25px;
+    padding: 10px;
+}
+
+main.homepage .links {
+    display: flex;
+    flex-direction: column;
+  
+}
+
+main.homepage .links a {
+    margin: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+#page-client-map,
+.routeMap {
+    height: 500px;
+    width: 100%;
+}
+
+.routeMap {
+    margin-top: -20px;
+    padding: 20px;
+}
+
+#page-client-map .address {
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    width: 400px;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 2px;
+    box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+    font-size: 14px;
+    outline: none;
+    text-overflow: ellipsis;
+    position: absolute;
+    margin: 10px;
+    background-color: white;
+}
+
+#page-client-map button[title="Mostrar mapa de ruas"],
+.routeMap button[title="Mostrar mapa de ruas"],
+#page-client-map button[title="Mostrar imagens de satélite"],
+.routeMap button[title="Mostrar imagens de satélite"],
+#page-client-map div[title="Arraste o Pegman até o mapa para abrir o Street View"],
+.routeMap div[title="Arraste o Pegman até o mapa para abrir o Street View"] {
+    display: none !important;
+}
